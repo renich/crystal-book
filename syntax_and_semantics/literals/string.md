@@ -8,7 +8,7 @@ A String is typically created with a string literal, enclosing UTF-8 characters 
 "hello world"
 ```
 
-A backslash can be used to denote some characters inside the string:
+A backslash can be used to denote various special characters inside the string:
 
 ```crystal
 "\"" # double quote
@@ -30,7 +30,7 @@ You can use a backslash followed by at most three digits to denote a code point 
 "\1"   # string with one character with code point 1
 ```
 
-You can use a backslash followed by an *u* and four hexadecimal characters to denote a unicode codepoint written:
+You can use a backslash followed by an *u* and four hexadecimal characters to denote a unicode codepoint:
 
 ```crystal
 "\u0041" # == "A"
@@ -89,7 +89,7 @@ characters, you can use alternative literals:
 
 ## Heredoc
 
-You can also use a "heredoc" for creating string:
+You can also use a "heredoc" to create strings:
 
 ```crystal
 <<-XML
@@ -99,7 +99,23 @@ You can also use a "heredoc" for creating string:
 XML
 ```
 
-A "heredoc" is written with `<<-IDENT`, where `IDENT` is an identifier, a sequence of letters and numbers that must start with a letter. The "heredoc" finishes in the line that starts with `IDENT`, ignoring leading whitespace.
+A "heredoc" starts with `<<-IDENT`, where `IDENT` is an identifier: a sequence of letters and numbers that must start with a letter. The "heredoc" finishes with a line that starts with `IDENT`, ignoring leading whitespace, and is either followed by a newline or by a non-alphanumeric character.
+
+The last point makes it possible to invoke methods on heredocs, or use them inside parentheses:
+
+```crystal
+<<-SOME
+hello
+SOME.upcase # => "HELLO"
+
+def upcase(string)
+  string.upcase
+end
+
+upcase(<<-SOME
+  hello
+  SOME) # => "HELLO"
+```
 
 Leading whitespace is removed from the heredoc contents according to the number of whitespace that this last `IDENT` has. For example:
 
