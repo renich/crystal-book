@@ -193,6 +193,8 @@ Alternatively, a backslash followed by a newline can be inserted inside the stri
 
 In this case, leading whitespace is not included in the resulting string.
 
+When writing multiline strings, prefer using a [heredoc](#heredoc). Heredocs automatically strip leading indentation based on the closing delimiter, allowing the code to remain cleanly formatted without introducing unexpected leading spaces into the string.
+
 ## Heredoc
 
 A _here document_ or _heredoc_ can be useful for writing strings spanning over multiple lines.
