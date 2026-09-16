@@ -52,6 +52,37 @@ else
 end
 ```
 
+## Type narrowing and order of `when` branches
+
+Because a `case` statement evaluates `when` branches sequentially, the type of a subject variable is narrowed after each branch. This can be important when matching a union type against conditions that might not compile for all types in the union.
+
+For example, if you match a `Char?` against a `Range(Char, Char)`, the `===` operator requires the subject to support comparison (`>=`). Since `Nil` does not support comparison, you will get a compile-time error if `Nil` is not filtered out first:
+
+```crystal
+char : Char? = nil
+
+case char
+when 'A'..'Z' # Compile-time error: undefined method '>=' for Nil
+  puts "capital letter"
+when Nil
+  puts "is nil"
+end
+```
+
+To fix this, reorder the branches so the types that do not support the operation are handled and filtered out first:
+
+```crystal
+char : Char? = nil
+
+case char
+when Nil
+  puts "is nil"
+  # Here, `char` is narrowed to `Char`
+when 'A'..'Z' # This now compiles because `char` is known to be a `Char`
+  puts "capital letter"
+end
+```
+
 You can invoke a method on the `case`'s expression in a `when` by using the implicit-object syntax:
 
 ```crystal
